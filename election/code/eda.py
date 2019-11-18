@@ -19,23 +19,34 @@ def print_result(data, attribute):
         print('======================================')
 
 if __name__ == '__main__':
+    
     data = pretreatment()
     swing_state = ['MI', 'OH', 'PA', 'WI', 'FL']
     deepblue_state = ['CA', 'NY', 'MA']
     deepred_state = ['AL', 'TX', 'TN']
     
-    sns.heatmap(data.corr(), annot = True)
+    print(data.describe())
+    heatmap_col = ['Clinton', 'Trump', 'population2014', 'age65plus', 'Female', 'White', 'Black', 'Hispanic', 'Edu_batchelors', 'Income', 'Poverty']
+    sns.heatmap(data[heatmap_col].corr(), annot = True)
     plt.title('correlation heatmap')
     plt.show()
     
-    plt.subplot(221)
+    plt.subplot(241)
     data[['Female']].boxplot()
-    plt.subplot(222)
+    plt.subplot(242)
     data[['White']].boxplot()
-    plt.subplot(223)
+    plt.subplot(243)
     data[['Black']].boxplot()
-    plt.subplot(224)
+    plt.subplot(244)
     data[['Hispanic']].boxplot()
+    plt.subplot(245)
+    data[['age65plus']].boxplot()
+    plt.subplot(246)
+    data[['Edu_batchelors']].boxplot()
+    plt.subplot(247)
+    data[['Income']].boxplot()
+    plt.subplot(248)
+    data[['Poverty']].boxplot()
     plt.show()
 
     print_result(data, ['population2014'])
@@ -48,13 +59,25 @@ if __name__ == '__main__':
     tot_votes_gop_2012 = data['votes_gop_2012'].sum()
     print('Total votes of Obama:',tot_votes_dem_2012) 
     print('Total votes of Romney:',tot_votes_gop_2012)
+    print('==================================')
 
     #print(data[data['state_abbr'].isin(deepred_state)].sort_values(by = 'population2014'))
     print('人数最多的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'population2014', ascending = False).head(100).result_2016.sum()/100)
+    print('人数最多的100个县占美国总人口的比例：')
+    print(data.sort_values(by = 'population2014', ascending = False).head(100).population2014.sum()/data.population2014.sum())
     print('人数最少的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'population2014', ascending = False).tail(100).result_2016.sum()/100)
-    print(data.sort_values(by = 'Black', ascending = False).tail(100).result_2016.sum()/100)
+    print('女性比例最多的100个县中希拉里获胜的比例：')
+    print(data.sort_values(by = 'Female', ascending = False).head(100).result_2016.sum()/100)
+    print('黑人比例最多的100个县中希拉里获胜的比例：')
+    print(data.sort_values(by = 'Black', ascending = False).head(100).result_2016.sum()/100)
+    print('白人比例最多的100个县中希拉里获胜的比例：')
+    print(data.sort_values(by = 'White', ascending = False).head(100).result_2016.sum()/100)
+    print('拉丁裔比例最多的100个县中希拉里获胜的比例：')
+    print(data.sort_values(by = 'Hispanic', ascending = False).head(100).result_2016.sum()/100)
+    print('受教育程度最高的100个县中希拉里获胜的比例：')
+    print(data.sort_values(by = 'Edu_batchelors', ascending = False).head(100).result_2016.sum()/100)
 
 
 
