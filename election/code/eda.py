@@ -21,14 +21,25 @@ def print_result(data, attribute):
 if __name__ == '__main__':
     
     data = pretreatment()
+    print('Basic information of the datasets after pretreatment:')
+    print(data.info())
+
     swing_state = ['MI', 'OH', 'PA', 'WI', 'FL']
     deepblue_state = ['CA', 'NY', 'MA']
     deepred_state = ['AL', 'TX', 'TN']
     
     print(data.describe())
-    heatmap_col = ['Clinton', 'Trump', 'population2014', 'age65plus', 'Female', 'White', 'Black', 'Hispanic', 'Edu_batchelors', 'Income', 'Poverty']
+    heatmap_col = ['Clinton', 'Trump', 'population2014', 'age65plus', 'Female', 'White', 'Black', 
+            'Hispanic', 'Edu_batchelors', 'Income', 'Poverty']
+    plt.figure(figsize = (13, 10), dpi = 100)
     sns.heatmap(data[heatmap_col].corr(), annot = True)
     plt.title('correlation heatmap')
+    plt.show()
+
+    pairplot_col = ['Clinton', 'Trump', 'population2014', 
+            'age65plus', 'White', 'Black', 'Edu_batchelors']
+    sns.pairplot(data[pairplot_col], diag_kind = 'kde',  
+            plot_kws = {'alpha': 0.3})
     plt.show()
     
     plt.subplot(241)
@@ -74,11 +85,17 @@ if __name__ == '__main__':
     print(data.sort_values(by = 'Black', ascending = False).head(100).result_2016.sum()/100)
     print('白人比例最多的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'White', ascending = False).head(100).result_2016.sum()/100)
-    print('拉丁裔比例最多的100个县中希拉里获胜的比例：')
-    print(data.sort_values(by = 'Hispanic', ascending = False).head(100).result_2016.sum()/100)
     print('受教育程度最高的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'Edu_batchelors', ascending = False).head(100).result_2016.sum()/100)
 
+    #print(data.groupby('state_abbr').sum())
+
+    print(data.sort_values(by = 'population2014', ascending = False).head(300).population2014.sum()/data.population2014.sum())
+    county_population500 = data.sort_values(by = 'population2014', ascending = False).head(300)
+    Clinton_bigwin = [1 if x - y >= 0.3 else 0 for x,y in np.array(county_population500[['Clinton', 'Trump']])]
+    Trump_bigwin = [1 if y - x >= 0.3 else 0 for x,y in np.array(county_population500[['Clinton', 'Trump']])]
+    print(sum(Clinton_bigwin), sum(Trump_bigwin))
+    
 
 
 
