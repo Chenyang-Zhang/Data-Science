@@ -14,7 +14,7 @@ def pretreatment():
             'Income', 'Poverty']
     data = raw_data[columns]
     data = data.rename(columns = {'SEX255214':'Female', 'RHI425214': 'Asian'})
-    data[['Female', 'Asian']] /= 100
+    data[['Female', 'Asian', 'age65plus','Edu_batchelors' ]] /= 100
     data = data.set_index('county_name')
     #print(data.isnull().sum()) #check whether there is missing values
     #data.dropna()
@@ -25,7 +25,7 @@ def pretreatment():
     data = data.sort_values(by = ['state_fips','population2014'], ascending = [True, False])
     data = data.drop('state_fips', axis = 1)
     print('======================================================')
-    #print(data['Asian'])
+    #print(data)
     return data
 
 

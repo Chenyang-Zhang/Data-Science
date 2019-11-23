@@ -30,17 +30,17 @@ if __name__ == '__main__':
     
     print(data.describe())
     heatmap_col = ['Clinton', 'Trump', 'population2014', 'age65plus', 'Female', 'White', 'Black', 
-            'Hispanic', 'Edu_batchelors', 'Income', 'Poverty']
+            'Hispanic', 'Asian','Edu_batchelors', 'Income', 'Poverty']
     plt.figure(figsize = (13, 10), dpi = 100)
     sns.heatmap(data[heatmap_col].corr(), annot = True)
     plt.title('correlation heatmap')
-    plt.show()
+    #plt.show()
 
     pairplot_col = ['Clinton', 'Trump', 'population2014', 
             'age65plus', 'White', 'Black', 'Edu_batchelors']
     sns.pairplot(data[pairplot_col], diag_kind = 'kde',  
             plot_kws = {'alpha': 0.3})
-    plt.show()
+    #plt.show()
 
     tot_votes_dem_2016 = data['votes_dem_2016'].sum()
     tot_votes_gop_2016 = data['votes_gop_2016'].sum()
@@ -97,8 +97,8 @@ if __name__ == '__main__':
     Trump_bigwin = [1 if y - x >= 0.3 else 0 for x,y in np.array(county_population500[['Clinton', 'Trump']])]
     print(sum(Clinton_bigwin), sum(Trump_bigwin))
     
-
-
+    plt.scatter(data['Asian'], data['Clinton'])
+    plt.show()
 
 
 
