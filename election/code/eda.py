@@ -41,6 +41,16 @@ if __name__ == '__main__':
     sns.pairplot(data[pairplot_col], diag_kind = 'kde',  
             plot_kws = {'alpha': 0.3})
     plt.show()
+
+    tot_votes_dem_2016 = data['votes_dem_2016'].sum()
+    tot_votes_gop_2016 = data['votes_gop_2016'].sum()
+    print('Total votes of Clinton:',tot_votes_dem_2016) 
+    print('Total votes of Trump:',tot_votes_gop_2016)
+    tot_votes_dem_2012 = data['votes_dem_2012'].sum()
+    tot_votes_gop_2012 = data['votes_gop_2012'].sum()
+    print('Total votes of Obama:',tot_votes_dem_2012) 
+    print('Total votes of Romney:',tot_votes_gop_2012)
+    print('==================================')
     
     plt.subplot(241)
     data[['Female']].boxplot()
@@ -62,15 +72,6 @@ if __name__ == '__main__':
 
     print_result(data, ['population2014'])
 
-    tot_votes_dem_2016 = data['votes_dem_2016'].sum()
-    tot_votes_gop_2016 = data['votes_gop_2016'].sum()
-    print('Total votes of Clinton:',tot_votes_dem_2016) 
-    print('Total votes of Trump:',tot_votes_gop_2016)
-    tot_votes_dem_2012 = data['votes_dem_2012'].sum()
-    tot_votes_gop_2012 = data['votes_gop_2012'].sum()
-    print('Total votes of Obama:',tot_votes_dem_2012) 
-    print('Total votes of Romney:',tot_votes_gop_2012)
-    print('==================================')
 
     #print(data[data['state_abbr'].isin(deepred_state)].sort_values(by = 'population2014'))
     print('人数最多的100个县中希拉里获胜的比例：')
