@@ -10,11 +10,11 @@ def pretreatment():
     #select some interested attribute 
     columns = ['state_fips', 'county_fips','state_abbr', 'county_name', 'population2014','votes_dem_2016', 
             'votes_gop_2016','Clinton', 'Trump', 'votes_dem_2012', 'votes_gop_2012',  
-            'age65plus', 'SEX255214','White','Black','Hispanic', 'RHI425214','Edu_batchelors', 
+            'age65plus', 'SEX255214','White','Black','Hispanic','Edu_batchelors', 
             'Income', 'Poverty']
     data = raw_data[columns]
-    data = data.rename(columns = {'SEX255214':'Female', 'RHI425214': 'Asian'})
-    data[['Female', 'Asian', 'age65plus','Edu_batchelors' ]] /= 100
+    data = data.rename(columns = {'SEX255214':'Female'})
+    data[['Female', 'age65plus','Edu_batchelors' ]] /= 100
     data = data.set_index('county_name')
     #print(data.isnull().sum()) #check whether there is missing values
     #data.dropna()

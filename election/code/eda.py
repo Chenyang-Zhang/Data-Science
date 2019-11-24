@@ -23,33 +23,26 @@ if __name__ == '__main__':
     data = pretreatment()
     print('Basic information of the datasets after pretreatment:')
     print(data.info())
-
-    swing_state = ['MI', 'OH', 'PA', 'WI', 'FL']
-    deepblue_state = ['CA', 'NY', 'MA']
-    deepred_state = ['AL', 'TX', 'TN']
-    
     print(data.describe())
+
     heatmap_col = ['Clinton', 'Trump', 'population2014', 'age65plus', 'Female', 'White', 'Black', 
-            'Hispanic', 'Asian','Edu_batchelors', 'Income', 'Poverty']
+            'Hispanic','Edu_batchelors', 'Income', 'Poverty']
     plt.figure(figsize = (13, 10), dpi = 100)
     sns.heatmap(data[heatmap_col].corr(), annot = True)
     plt.title('correlation heatmap')
-    #plt.show()
+    plt.show()
 
     pairplot_col = ['Clinton', 'Trump', 'population2014', 
             'age65plus', 'White', 'Black', 'Edu_batchelors']
     sns.pairplot(data[pairplot_col], diag_kind = 'kde',  
-            plot_kws = {'alpha': 0.3})
+            plot_kws = {'alpha': 0.2})
     #plt.show()
 
     tot_votes_dem_2016 = data['votes_dem_2016'].sum()
     tot_votes_gop_2016 = data['votes_gop_2016'].sum()
+    print('==================================')
     print('Total votes of Clinton:',tot_votes_dem_2016) 
     print('Total votes of Trump:',tot_votes_gop_2016)
-    tot_votes_dem_2012 = data['votes_dem_2012'].sum()
-    tot_votes_gop_2012 = data['votes_gop_2012'].sum()
-    print('Total votes of Obama:',tot_votes_dem_2012) 
-    print('Total votes of Romney:',tot_votes_gop_2012)
     print('==================================')
     
     plt.subplot(241)
@@ -71,13 +64,14 @@ if __name__ == '__main__':
     plt.show()
 
     print_result(data, ['population2014'])
+    data[['population2014']].boxplot()
+    plt.show()
 
-
-    #print(data[data['state_abbr'].isin(deepred_state)].sort_values(by = 'population2014'))
     print('人数最多的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'population2014', ascending = False).head(100).result_2016.sum()/100)
     print('人数最多的100个县占美国总人口的比例：')
-    print(data.sort_values(by = 'population2014', ascending = False).head(100).population2014.sum()/data.population2014.sum())
+    print(data.sort_values(by = 'population2014', 
+        ascending = False).head(100).population2014.sum()/data.population2014.sum())
     print('人数最少的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'population2014', ascending = False).tail(100).result_2016.sum()/100)
     print('女性比例最多的100个县中希拉里获胜的比例：')
@@ -88,16 +82,50 @@ if __name__ == '__main__':
     print(data.sort_values(by = 'White', ascending = False).head(100).result_2016.sum()/100)
     print('受教育程度最高的100个县中希拉里获胜的比例：')
     print(data.sort_values(by = 'Edu_batchelors', ascending = False).head(100).result_2016.sum()/100)
+    print('=========================================')
 
-    #print(data.groupby('state_abbr').sum())
 
-    print(data.sort_values(by = 'population2014', ascending = False).head(300).population2014.sum()/data.population2014.sum())
-    county_population500 = data.sort_values(by = 'population2014', ascending = False).head(300)
-    Clinton_bigwin = [1 if x - y >= 0.3 else 0 for x,y in np.array(county_population500[['Clinton', 'Trump']])]
-    Trump_bigwin = [1 if y - x >= 0.3 else 0 for x,y in np.array(county_population500[['Clinton', 'Trump']])]
-    print(sum(Clinton_bigwin), sum(Trump_bigwin))
+    print('人口最多的300个县占总人口比例：')
+    print(data.sort_values(by = 'population2014', 
+        ascending = False).head(300).population2014.sum()/data.population2014.sum())
+    county_population300 = data.sort_values(by = 'population2014', ascending = False).head(300)
+    Clinton_bigwin = [1 if x - y >= 0.3 else 0 for x,y in np.array(county_population300[['Clinton', 'Trump']])]
+    Trump_bigwin = [1 if y - x >= 0.3 else 0 for x,y in np.array(county_population300[['Clinton', 'Trump']])]
+    print('Among the 300 most populous cities:')
+    print('Num of counties Clinton won:', county_population300.result_2016.sum())
+    print('Num of counties Clinton won 30%:',sum(Clinton_bigwin))
+    print('Num of counties Trump won 30%:', sum(Trump_bigwin))
     
-    plt.scatter(data['Asian'], data['Clinton'])
+    swing_state = ['MI', 'OH', 'PA', 'WI', 'FL']
+    blue_state = ['CA', 'NY', 'MA']
+    red_state = ['AL', 'TX', 'TN']
+    data_swing = data[data['state_abbr'].isin(swing_state)]
+    data_red = data[data['state_abbr'].isin(red_state)]
+    data_blue = data[data['state_abbr'].isin(blue_state)]
+    
+    plt.scatter(data_swing['Edu_batchelors'],data_swing['Clinton'],color=[1,0,1],alpha=0.5)
+    plt.scatter(data_red['Edu_batchelors'],data_red['Clinton'],color='r',alpha=0.5)
+    plt.scatter(data_blue['Edu_batchelors'],data_blue['Clinton'],color=[0,0,1],alpha=0.5)
+    plt.legend(['swing', 'red', 'blue'], fontsize = 15)
+    plt.xlabel('Batchelors ppercent')
+    plt.ylabel('Vote rate of Clinton')
+    plt.show()
+
+    plt.figure(figsize = (20,20))
+    plt.subplot(121)
+    sns.distplot(data_swing['Clinton'], bins = 50, kde_kws = {'color': [1,0,1]}, color = [1,0,1])
+    sns.distplot(data_red['Clinton'], bins = 50, kde_kws={"color": "r"}, color = 'r')
+    sns.distplot(data_blue['Clinton'], bins = 50, kde_kws={"color": [0,0,1]}, color = [0,0,1])
+    plt.legend(['swing_state', 'red_state', 'blue_state'], fontsize = 15)
+    plt.grid(linestyle = '--')
+    plt.xlabel('Vote rate of Clinton', fontsize = 15)
+    plt.subplot(122)
+    sns.distplot(data_swing['Trump'], bins = 50, kde_kws = {'color': [1,0,1]}, color = [1,0,1])
+    sns.distplot(data_red['Trump'], bins = 50, kde_kws={"color": "r"}, color = 'r')
+    sns.distplot(data_blue['Trump'], bins = 50, kde_kws={"color": [0,0,1]}, color = [0,0,1])
+    plt.legend(['swing_state', 'red_state', 'blue_state'], fontsize = 15)
+    plt.grid(linestyle = '--')
+    plt.xlabel('Vote rate of Trump', fontsize = 15)
     plt.show()
 
 
