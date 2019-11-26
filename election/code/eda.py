@@ -129,6 +129,8 @@ if __name__ == '__main__':
     plt.show()
 
 
+    plt.scatter(data_blue['population2014'], data_blue['Clinton'])
+    plt.show()
 
 
 
